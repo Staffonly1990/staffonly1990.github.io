@@ -1,0 +1,157 @@
+/* ============= Animation background ========= */
+
+.background {
+    background: linear-gradient(45deg, #f5f7fa, #c3cfe2);
+    background-size: 400% 400%;
+    animation: Gradient 15s ease infinite;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0px;
+}
+
+.cube {
+    position: absolute;
+    top: 80%;
+    left: 45%;
+    width: 10px;
+    height: 10px;
+    border: solid 1px #D7D4E4;
+    transform-origin: top left;
+    transform: scale(0) rotate(0deg) translate(-50%, -50%);
+    animation: cube 12s ease-in forwards infinite;
+}
+
+.cube:nth-child(2n) {
+    border-color: #FFF;
+}
+
+.cube:nth-child(2) {
+    animation-delay: 2s;
+    left: 25%;
+    top: 40%;
+}
+
+.cube:nth-child(3) {
+    animation-delay: 4s;
+    left: 75%;
+    top: 50%;
+}
+
+.cube:nth-child(4) {
+    animation-delay: 6s;
+    left: 90%;
+    top: 10%;
+}
+
+.cube:nth-child(5) {
+    animation-delay: 8s;
+    left: 10%;
+    top: 85%;
+}
+
+.cube:nth-child(6) {
+    animation-delay: 10s;
+    left: 50%;
+    top: 10%;
+}
+
+
+/* Animate Background*/
+
+@keyframes Gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes cube {
+    from {
+        transform: scale(0) rotate(0deg) translate(-50%, -50%);
+        opacity: 1;
+    }
+    to {
+        transform: scale(20) rotate(960deg) translate(-50%, -50%);
+        opacity: 0;
+    }
+}
+
+.liNum {
+    min-height: calc(100vh / 15);
+    width: calc(100vh / 10);
+    background: linear-gradient(45deg, #f5f7fa, #c3cfe2);
+}
+
+.liNum:hover {
+    background: linear-gradient(90deg, #f5f7fa, #c3cfe2);
+}
+
+.example {
+    font-size: calc(100vh / 20);
+}
+
+.liNumBtn {
+    font-size: calc(100vh / 25);
+    min-height: calc(100vh / 12);
+}
+
+.btnAnswer {
+    font-size: calc(100vh / 15);
+    height: 100%;
+}
+
+.inputAnswer {
+    min-height: calc(100vh / 12);
+    outline: none;
+    text-align: center;
+    font-size: calc(100vh / 25);
+}
+
+.clearBtn {
+    text-align: center;
+    font-size: calc(100vh / 25);
+    min-height: calc(100vh / 12);
+}
+
+.details {
+    font-size: calc(100vh / 40);
+}
+
+.interactive {
+    max-height: calc(100vh / 5);
+    height: calc(100vh / 5);
+    position: relative;
+    padding: 0 20px;
+}
+
+.interactive:before {
+    position: absolute;
+    content: "";
+    width: 20px;
+    height: 40%;
+    background: red;
+    right: 0;
+    bottom: 0;
+}
+
+.interactive:after {
+    position: absolute;
+    content: "";
+    width: 20px;
+    height: 65%;
+    background: orange;
+    bottom: 0;
+    left: 0;
+}
+
+.interactive img {
+    height: 100%;
+}

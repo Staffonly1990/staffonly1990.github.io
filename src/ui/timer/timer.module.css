@@ -1,0 +1,4 @@
+.time {
+    position: relative;
+    font-size: calc(100vh / 40);
+}
