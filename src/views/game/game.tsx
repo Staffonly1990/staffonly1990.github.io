@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useMemo, useRef, useState } from 'react';
 import styles from './game.module.css'
 import ninja1 from '../../assets/images/ninja1.png'
 import monster from '../../assets/images/monster.png'
@@ -44,10 +44,14 @@ const changeLvl = 10;
 const Game: FC = () => {
   const [userAnswer, setUserAnswer] = useState('');
   const [trueAnswer, setTrueAnswer] = useState<number>();
+  // useMemo
   const [example, setExample] = useState('');
+  // useMemo
   const [adens, setAdens] = useState(0);
   const [lvl, setLvl] = useState(0);
   const [error, setError] = useState(false);
+
+  const timer = useMemo(() => { return <Timer triger={lvl} /> }, [lvl]);
 
   const addNumber = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const number = e?.currentTarget?.textContent ?? e?.currentTarget?.innerText;
@@ -74,7 +78,9 @@ const Game: FC = () => {
     const numberTwo = Math.floor(Math.random() * (difficultyList[difficulty].maxNum - difficultyList[difficulty].minNum)) + difficultyList[difficulty].minNum;
 
     setLvl((prevLvl) => { if (err) { return 0 } else { return prevLvl + 1 } });
+
     setExample(err ? `${trueAnswer}` : `${numberOne}+${numberTwo}`);
+
     setTrueAnswer(numberOne + numberTwo);
     setError(err ?? false);
     setUserAnswer('');
@@ -99,7 +105,7 @@ const Game: FC = () => {
               <span>lvl: {lvl}</span>
             </div>
 
-            <Timer triger={lvl} />
+            {timer}
 
           </div>
           {example ?

@@ -2,27 +2,32 @@ import React, { FC, useEffect, useState } from 'react';
 import styles from './timer.module.css'
 
 interface ITimer {
-  triger?: number;
+  triger: number;
 }
 
-var id: any;
-
 const Timer: FC<ITimer> = ({ triger }) => {
-  const [time, setTime] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  const [intervalState, setIntervalState] = useState<NodeJS.Timer>();
+
+  console.log('render');
+
+  const start = () => {
+    setIntervalState((preInterval) => {
+      if (preInterval) clearTimeout(preInterval);
+      return triger ? setInterval(() => setSeconds((preSeconds) => preSeconds + 1), 1000) : undefined;
+    })
+  };
 
   useEffect(() => {
-    clearInterval(id);
-    setTime(0);
-
-    id = setInterval(() => {
-      setTime((preTime) => { if (triger) { return preTime + 1 } else { return 0 } })
-    }, 1000);
+    setSeconds(0);
+    start();
   }, [triger])
 
   return (
     <div className={`${styles.time} text-center`}>
       <div>TIME</div>
-      <div>{time}</div>
+      <div>{seconds}</div>
     </div>
   );
 }
