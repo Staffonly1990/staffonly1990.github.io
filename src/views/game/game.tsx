@@ -2,40 +2,54 @@ import React, { FC, useMemo, useRef, useState } from 'react';
 import styles from './game.module.css'
 import ninja1 from '../../assets/images/ninja1.png'
 import monster from '../../assets/images/monster.png'
-import Timer from '../../ui/timer/timer';
+import Timer from '../../features/timer/timer';
 
 const numsLeft = ['4', '3', '2', '1', '0'];
 const numsRight = ['5', '6', '7', '8', '9'];
 
-interface IDifficultyList {
-  title: string;
+interface IStepList {
   minNum: number;
   maxNum: number;
   amount: number;
   adens: number;
 }
 
-const difficultyList: IDifficultyList[] = [
+const stepList: IStepList[] = [
   {
-    title: 'easy',
     amount: 2,
     minNum: 0,
     maxNum: 10,
     adens: 1
   },
   {
-    title: 'medium',
-    amount: 2,
-    minNum: 10,
-    maxNum: 100,
+    amount: 3,
+    minNum: 0,
+    maxNum: 10,
     adens: 2
   },
   {
-    title: 'hard',
+    amount: 2,
+    minNum: 10,
+    maxNum: 100,
+    adens: 3
+  },
+  {
+    amount: 3,
+    minNum: 10,
+    maxNum: 100,
+    adens: 4
+  },
+  {
     amount: 2,
     minNum: 100,
     maxNum: 1000,
-    adens: 3
+    adens: 5
+  },
+  {
+    amount: 3,
+    minNum: 100,
+    maxNum: 1000,
+    adens: 6
   }
 ]
 
@@ -45,11 +59,11 @@ const Game: FC = () => {
   const [userAnswer, setUserAnswer] = useState('');
   const [trueAnswer, setTrueAnswer] = useState<number>();
   // useMemo
-  const [example, setExample] = useState('');
+  const [exampleState, setExampleState] = useState('');
   // useMemo
   const [adens, setAdens] = useState(0);
   const [lvl, setLvl] = useState(0);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(true);
 
   const timer = useMemo(() => { return <Timer triger={lvl} /> }, [lvl]);
 
@@ -60,28 +74,45 @@ const Game: FC = () => {
 
   const cleare = () => { setUserAnswer(''); };
 
+  const exampleRender = (date: { amount: number, max: number, min: number }): [string, number] => {
+    let num = Math.floor(Math.random() * (date.max - date.min)) + date.min;
+    let example = `${num}`;
+    let resalt = num;
+    while (date.amount !== 1) {
+      num = Math.floor(Math.random() * (date.max - date.min)) + date.min;
+      example = `${example} + ${num}`;
+      resalt = resalt + num;
+      date.amount = date.amount - 1;
+    }
+    return [example, resalt];
+  };
+
   const answerClick = () => {
     const err = Number(userAnswer) !== trueAnswer;
 
-    const difficulty = Math.floor((lvl) / changeLvl);
+    const step = Math.floor((lvl) / changeLvl);
 
-    setAdens((prevAdens) => { if (err) { return 0 } else if (err === false) { return prevAdens + difficultyList[difficulty].adens } else { return prevAdens } });
-
+    setAdens((prevAdens) => {
+      if (err) { return 0 }
+      else if (err === false) { return prevAdens + stepList[step].adens }
+      else { return prevAdens }
+    });
     start(err, lvl + 1);
   };
 
   const start = (err?: boolean, nextLvl?: number) => {
-
-    const difficulty = Math.floor((nextLvl ?? 0) / changeLvl);
-
-    const numberOne = Math.floor(Math.random() * (difficultyList[difficulty].maxNum - difficultyList[difficulty].minNum)) + difficultyList[difficulty].minNum;
-    const numberTwo = Math.floor(Math.random() * (difficultyList[difficulty].maxNum - difficultyList[difficulty].minNum)) + difficultyList[difficulty].minNum;
-
+    const step = Math.floor((nextLvl ?? 0) / changeLvl);
     setLvl((prevLvl) => { if (err) { return 0 } else { return prevLvl + 1 } });
+    
+    const [example, resalt] = exampleRender({
+      amount: stepList[step].amount,
+      max: stepList[step].maxNum,
+      min: stepList[step].minNum
+    });
 
-    setExample(err ? `${trueAnswer}` : `${numberOne}+${numberTwo}`);
+    setExampleState(err ? `${trueAnswer}` : example);
 
-    setTrueAnswer(numberOne + numberTwo);
+    setTrueAnswer(resalt);
     setError(err ?? false);
     setUserAnswer('');
   };
@@ -104,12 +135,13 @@ const Game: FC = () => {
               <span>Adden: {adens}</span>
               <span>lvl: {lvl}</span>
             </div>
-
             {timer}
-
           </div>
-          {example ?
-            <div className={`text-center ${styles.example} border-y-4 border-black ${error ? 'text-red-600 border-none' : ''} `}>{example}</div>
+
+          {exampleState ?
+            <div className={`text-center ${styles.example} border-y-4 border-black ${error ? 'text-red-600 border-none' : ''} `}>
+              {exampleState}
+            </div>
             :
             <div className={`text-center ${styles.example} border-y-4 border-black`}>Get Started</div>
           }
@@ -132,10 +164,10 @@ const Game: FC = () => {
 
         <div className="w-full flex flex-col justify-between">
           <span className={`w-full ${styles.inputAnswer}`}>{userAnswer}</span>
-          {example && !error ?
-            <button onClick={answerClick} className={`${styles.btnAnswer} bg-green-400 hover:bg-green-600`}>Answer</button>
-            :
+          {error ?
             <button onClick={() => { start(); }} className={`${styles.btnAnswer} bg-green-400 hover:bg-green-600`}>Start</button>
+            :
+            <button onClick={answerClick} className={`${styles.btnAnswer} bg-green-400 hover:bg-green-600`}>Answer</button>
           }
           <button onClick={cleare} className={`bg-blue-500 hover:bg-blue-600 ${styles.clearBtn}`}>Clear</button>
         </div>

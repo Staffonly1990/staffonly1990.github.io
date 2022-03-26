@@ -10,8 +10,6 @@ const Timer: FC<ITimer> = ({ triger }) => {
 
   const [intervalState, setIntervalState] = useState<NodeJS.Timer>();
 
-  console.log('render');
-
   const start = () => {
     setIntervalState((preInterval) => {
       if (preInterval) clearTimeout(preInterval);
