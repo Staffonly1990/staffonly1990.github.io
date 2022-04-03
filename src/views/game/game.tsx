@@ -57,14 +57,15 @@ const changeLvl = 10;
 
 const Game: FC = () => {
   const [userAnswer, setUserAnswer] = useState('');
+
+  // вынести в Example
   const [trueAnswer, setTrueAnswer] = useState<number>();
-  // useMemo
   const [exampleState, setExampleState] = useState('');
-  // useMemo
+  // вынести в Example
+
   const [adens, setAdens] = useState(0);
   const [lvl, setLvl] = useState(0);
   const [error, setError] = useState(true);
-
   const timer = useMemo(() => { return <Timer triger={lvl} /> }, [lvl]);
 
   const addNumber = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -103,16 +104,17 @@ const Game: FC = () => {
   const start = (err?: boolean, nextLvl?: number) => {
     const step = Math.floor((nextLvl ?? 0) / changeLvl);
     setLvl((prevLvl) => { if (err) { return 0 } else { return prevLvl + 1 } });
-    
+
+    // вынести в Example
     const [example, resalt] = exampleRender({
       amount: stepList[step].amount,
       max: stepList[step].maxNum,
       min: stepList[step].minNum
     });
-
     setExampleState(err ? `${trueAnswer}` : example);
-
     setTrueAnswer(resalt);
+    // вынести в Example
+
     setError(err ?? false);
     setUserAnswer('');
   };
